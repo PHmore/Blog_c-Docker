@@ -6,8 +6,8 @@ require_once "../model/connection.php";
 class Data{
 
 public static function login($username, $senha){
-    $conn = new connection_db();
-    $conn = $conn->Connect();
+    $conn = new connection();
+    $conn = $conn->Connect_db();
 
     $sql = "SELECT username, senha FROM users WHERE username = '$username' and senha = '$senha'";
     $result = mysqli_query($conn, $sql);
@@ -33,8 +33,8 @@ public static function login($username, $senha){
 
 public static function cadastro ($username, $senha, $email)
 {
-    $conn = new connection_db();
-    $conn = $conn->Connect();
+    $conn = new connection();
+    $conn = $conn->Connect_db();
 
     $sql = "SELECT username FROM users WHERE username = '$username'";
     $result = mysqli_query($conn, $sql);
@@ -47,8 +47,10 @@ public static function cadastro ($username, $senha, $email)
 
     if (empty($email)) {
         $email = "NULL";
-    } else {
-        $email = "'" . $email . "'";
+    }
+
+    if (empty($senha)) {
+        $senha = "NULL";
     }
     
     $sql = "INSERT INTO users (id, username, senha, email) VALUES (NULL, '$username', '$senha', '$email')";
@@ -62,6 +64,7 @@ public static function cadastro ($username, $senha, $email)
     }
     else
     {
+        echo "Verifique se as entradas forma válidas.<br>";
         echo "Erro ao cadastrar o usuário: " . mysqli_error($conn);
     }
 

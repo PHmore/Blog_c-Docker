@@ -1,6 +1,7 @@
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $token = $_POST["token"];
+    echo $token;
     $novaSenha = $_POST["nova_senha"];
     
     // Buscar o e-mail associado ao token no banco de dados

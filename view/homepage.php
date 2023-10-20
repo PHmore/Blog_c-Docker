@@ -30,6 +30,12 @@ if (!$usuarioLogado) {
     }
 ?>
 
+    <table align="center">
+    <tr>
+        <td>
+            <!-- Tabela Paginada -->
+            
+
     <!-- Tabela Paginada -->
     <?php
     // Simulação de dados
@@ -41,7 +47,7 @@ if (!$usuarioLogado) {
     );
 
     // Número de registros por página
-    $registrosPorPagina = 2;
+    $registrosPorPagina = 5;
 
     // Página atual (inicializada como 1)
     $paginaAtual = isset($_GET['pagina']) ? $_GET['pagina'] : 1;
@@ -54,7 +60,7 @@ if (!$usuarioLogado) {
 
     // Exibe a tabela
     echo '<table border="1">';
-    echo '<tr><th>Nome</th><th>Email</th></tr>';
+    echo '<tr><th>Autor</th><th>Título</th></tr>';
 
     for ($i = $indiceInicio; $i < $indiceFim && $i < count($dados); $i++) {
         echo '<tr>';
@@ -66,9 +72,12 @@ if (!$usuarioLogado) {
 
     echo '</table>';
     ?>
-
-    <!-- Paginação -->
-    <?php
+        </td>
+    </tr>
+    <tr>
+        <td align="center">
+            <!-- Paginação -->
+            <?php
     // Calcula o número total de páginas
     $numPaginas = ceil(count($dados) / $registrosPorPagina);
 
@@ -77,6 +86,13 @@ if (!$usuarioLogado) {
         echo '<a href="?pagina=' . $i . '">' . $i . '</a> ';
     }
     ?>
+        </td>
+    </tr>
+</table>
 
 </body>
 </html>
+
+
+
+
