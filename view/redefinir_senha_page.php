@@ -1,18 +1,36 @@
+<?php
+session_start();
+if (isset($_SESSION['aviso'])) {
+    $verificado = true;
+} else {
+    $verificado = false;
+}
+?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Redefinir Senha</title>
+    <title>Confirmar Email</title>
+    <?php
+    if (isset($_SESSION['aviso'])) {
+        echo $_SESSION['aviso'];
+         echo '<div class="aviso"> Codigo incorreto, tente novamente</div>';
+         unset($_SESSION['aviso']);
+    }
+    ?>
 </head>
 <body>
-    <h1>Redefinir Senha</h1>
+    <h1>Confirmar Email</h1>
     
-    <form action="processar_redefinicao.php" method="post">
-        <input type="hidden" name="token" value="<?php echo $_GET['token']; ?>">
-        <label for="nova_senha">Nova Senha:</label>
-        <input type="password" id="nova_senha" name="nova_senha" required>
-        <input type="submit" value="Redefinir Senha">
+    <form action="../control/redefinir_senha.php" method="get">
+        <label for="CODIGO">Digite o código enviado para: <?php echo $_SESSION['email'];?></label><br><br>
+        <input type="text" id="codigo" name="codigo" required>
+        <input type="submit" value="confirmar">
+    </form>
+    <form action="login.php" method="post">
+        <input type="submit" value="Voltar">
     </form>
 </body>
 </html>

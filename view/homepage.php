@@ -26,7 +26,14 @@ if (!$usuarioLogado) {
     }
     else
     {
-        echo 'Bem-vindo, ' . $_SESSION['username'] . '!';
+        echo '<form action="login.php" method="post">';
+        echo 'Bem-vindo, ' . $_SESSION['username'] . '! com id = ' . $_SESSION['id'] . '<br>';
+        echo '<input type="submit" value="Sair">';
+        echo '</form>';
+        echo '<form action="meus_artigos.php" method="post">';
+        echo '<br>';
+        echo '<input type="submit" value="Meus artigos">';
+        echo '</form>';
     }
 ?>
 
