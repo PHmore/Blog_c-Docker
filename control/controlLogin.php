@@ -23,9 +23,4 @@ session_start();
         }
     }
 
-
-function carregar_arts ($inicio,$limite_pag)
-{
-
-}
 ?>

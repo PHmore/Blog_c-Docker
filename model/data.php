@@ -110,12 +110,10 @@ public static function busca_username ($username)
     
 }
 
-public static function MeusArts($username)
+public static function MeusArts($id_user)
 {
     $conn = new connection();
     $conn = $conn->Connect_db();
-
-    $id_user = $_SESSION['id'];
 
     $sql = "SELECT *
     FROM artigos where artigos.id_user = '$id_user';
@@ -123,21 +121,97 @@ public static function MeusArts($username)
     $result = mysqli_query($conn, $sql);
     //$result = $conn->query($sql);
 
-    if(empty($result)){
+    if ($result->num_rows > 0) {
+        // Inicializa um array para armazenar os resultados
+        $artigos = array();
+        
+        // Loop através das linhas da consulta
+        while($row = $result->fetch_assoc()) {
+            // Adiciona a linha ao array de artigos
+            $artigos[] = $row;
+        }
+    } else {
+        $artigos = array(); // Se não houver resultados, inicializa um array vazio
         echo "não há artigos";
-        return null;
     }
 
-    $row = mysqli_fetch_assoc($result);
-    var_dump($row);
+    //$row = mysqli_fetch_assoc($result);
+    //var_dump($row);
+    return $artigos;
     mysqli_free_result($result); // Libera o resultado da consulta
 
     // Fechar a conexão
     $conn->close();
 }
 
+public static function dados_art($id_art)
+{
+    $conn = new connection();
+    $conn = $conn->Connect_db();
 
+    $sql = "SELECT *
+    FROM artigos where artigos.id_art = '$id_art';
+    ";
+    $result = mysqli_query($conn, $sql);
+    if ($result && mysqli_num_rows($result) > 0) {
+        return mysqli_fetch_assoc($result);
+    } else {
+        $aux = "Houve algum erro em ao buscar o artigo";
+    }
+    return $aux;
+}
 
+public static function upar_art($titulo,$texto,$id_user,$status)
+{
+    //Primeiro pesquisar se existe algum artigo com o titulo
+
+    $conn = new connection();
+    $conn = $conn->Connect_db();
+
+    $sql = "SELECT *
+    FROM artigos where artigos.id_user = '$id_user' AND artigos.titulo = '$titulo'
+    ";
+    $result = mysqli_query($conn, $sql);
+
+    if ($result->num_rows > 0) {
+        $aux = "Titulo Indisponível";
+    }else{
+
+        $sql = "INSERT INTO artigos 
+        (id_art, id_user, status, titulo, texto, data_criado, data_atualizacao) 
+        VALUES (NULL, '$id_user', '$status', '$titulo', '$texto', CURRENT_TIMESTAMP, NOW()) ";    
+        $result = mysqli_query($conn, $sql);
+
+        if ($result)
+        {
+            $aux = "Arquivado com sucesso";
+        }
+        else
+        {
+            $aux = "Ocorreu algum erro";
+        }
+    }
+return $aux;
+}
+
+public static function excluir_art($id_art)
+{
+    $conn = new connection();
+    $conn = $conn->Connect_db();
+
+    $sql = "DELETE FROM artigos WHERE artigos.id_art = $id_art";
+    $result = mysqli_query($conn, $sql);
+
+    if ($result)
+        {
+            $aux = "Excluido com sucesso";
+        }
+        else
+        {
+            $aux = "Ocorreu algum erro";
+        }
+    return $aux;
+}
 
 //Pensar melhor se vai ser necessário guardar o token no banco de dados
 public static function db_Token ($token, $status)
