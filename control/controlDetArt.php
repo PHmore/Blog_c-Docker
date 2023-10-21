@@ -14,26 +14,24 @@ $_SESSION['aviso'] = $data->upar_art($_POST['titulo'],$_POST['texto'],$_SESSION[
 {
     $_SESSION['aviso'] = $data->upar_art($_POST['titulo'],$_POST['texto'],$_SESSION['id'],"Publicado");
 
-}
-else{
+}else if($_POST['acao'] == "Salvar edição"){
 
-echo "O arquivo será excluido em breve";
-
-}
+    $_SESSION['aviso'] = "Edição será salva";//$data->upar_art($_POST['titulo'],$_POST['texto'],$_SESSION['id'],"Rascunho");
+    
+    }else if($_POST['acao'] == "Publicar edição")
+    {
+        $_SESSION['aviso'] = "Edição será publicada";//$data->upar_art($_POST['titulo'],$_POST['texto'],$_SESSION['id'],"Publicado");
+    
+    }
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "GET")
 {
-    if($_GET['acao']=="Editar")
-    {
+    if ($_GET['acao']=="Excluir"){
 
-    echo "Será editado";
+        $_SESSION['aviso'] = $data->excluir_art($_GET['id_art']);
 
-    }else if ($_GET['acao']=="Excluir"){
-
-    $_SESSION['aviso'] = $data->excluir_art($_GET['id_art']);
-
-}
+        }
 }
 
 if ($_SERVER['HTTP_REFERER']) {

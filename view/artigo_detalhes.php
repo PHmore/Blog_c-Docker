@@ -2,9 +2,12 @@
 include_once "../model/data.php";
 session_start();
 
-//Remover uso do data e usa-lo em um control 
-//Mostrar comentário bem como a opção de criar comentários para visitante
-//E adicionar botão para editar
+$data = new Data();
+$data_art = $data->dados_art($_GET['id_art']);
+$status = $data_art['status'];
+$texto = $data_art['texto'];
+$titulo = $data_art['titulo'];
+
 ?>
 
 <!DOCTYPE html>
@@ -17,26 +20,24 @@ session_start();
 </head>
 <body>
 
-    <?php
-        $data = new Data();
-        $data_art = $data->dados_art($_GET['id_art']);
-        $status = $data_art['status'];
-        $texto = $data_art['texto'];
-        $titulo = $data_art['titulo'];
-    ?>
+<form action="Criar_artigo.php" method="post">
+    <input type="hidden" name="titulo" id="titulo" value="<?php echo $titulo; ?>">
+    <input type="hidden" name="texto" id="texto" value="<?php echo $texto; ?>">
+    <button type="submit" name="editar">Editar</button>
+</form>
 
-    <table border="1" width="80%" align="center">
-        <tr>
-            <td colspan="2">
-                <?php echo " <center> ($status)</center> Titulo: $titulo "; ?>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <?php echo $texto; ?>
-            </td>
-        </tr>
-    </table>
+<table border="1" width="80%" align="center">
+    <tr>
+        <td colspan="2">
+            <?php echo "<center> ($status)</center> Título: " . htmlspecialchars($titulo); ?>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <?php echo nl2br(htmlspecialchars($texto)); ?>
+        </td>
+    </tr>
+</table>
 
 </body>
 </html>
