@@ -6,6 +6,8 @@ $data = new Data();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
+    $_SESSION['texto'] = $_POST['texto'];
+
 if($_POST['acao'] == "Salvar"){
 
 $_SESSION['aviso'] = $data->upar_art($_POST['titulo'],$_POST['texto'],$_SESSION['id'],"Rascunho");
@@ -16,22 +18,16 @@ $_SESSION['aviso'] = $data->upar_art($_POST['titulo'],$_POST['texto'],$_SESSION[
 
 }else if($_POST['acao'] == "Salvar edição"){
 
-    $_SESSION['aviso'] = "Edição será salva";//$data->upar_art($_POST['titulo'],$_POST['texto'],$_SESSION['id'],"Rascunho");
+    $_SESSION['aviso'] = $data->upar_art_edit($_POST['titulo'],$_POST['texto'],$_POST['id_art'],"Rascunho");
     
     }else if($_POST['acao'] == "Publicar edição")
     {
-        $_SESSION['aviso'] = "Edição será publicada";//$data->upar_art($_POST['titulo'],$_POST['texto'],$_SESSION['id'],"Publicado");
+        $_SESSION['aviso'] = $data->upar_art_edit($_POST['titulo'],$_POST['texto'],$_POST['id_art'],"Publicado");
     
+    } else if ($_POST['acao']=="Excluir"){
+
+        $_SESSION['aviso'] = $data->excluir_art($_POST['id_art']);
     }
-}
-
-if ($_SERVER["REQUEST_METHOD"] == "GET")
-{
-    if ($_GET['acao']=="Excluir"){
-
-        $_SESSION['aviso'] = $data->excluir_art($_GET['id_art']);
-
-        }
 }
 
 if ($_SERVER['HTTP_REFERER']) {

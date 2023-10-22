@@ -4,6 +4,7 @@ session_start();
 
 $data = new Data();
 $data_art = $data->dados_art($_GET['id_art']);
+$id_art = $_GET['id_art'];
 $status = $data_art['status'];
 $texto = $data_art['texto'];
 $titulo = $data_art['titulo'];
@@ -21,6 +22,7 @@ $titulo = $data_art['titulo'];
 <body>
 
 <form action="Criar_artigo.php" method="post">
+<input type="hidden" name="id_art" id="id_art" value="<?php echo $id_art; ?>">
     <input type="hidden" name="titulo" id="titulo" value="<?php echo $titulo; ?>">
     <input type="hidden" name="texto" id="texto" value="<?php echo $texto; ?>">
     <button type="submit" name="editar">Editar</button>

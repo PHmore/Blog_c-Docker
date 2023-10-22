@@ -8,6 +8,9 @@ public static function login($username, $senha){
     $conn = new connection();
     $conn = $conn->Connect_db();
 
+    $username= mysqli_escape_string($conn,$username);
+    $senha = mysqli_escape_string($conn,$senha);
+
     $sql = "SELECT id, username, senha FROM users WHERE username = '$username' and senha = '$senha'";
     $result = mysqli_query($conn, $sql);
     //$result = $conn->query($sql);
@@ -30,6 +33,10 @@ public static function cadastro ($username, $senha, $email)
 {
     $conn = new connection();
     $conn = $conn->Connect_db();
+
+    $username= mysqli_escape_string($conn,$username);
+    $senha = mysqli_escape_string($conn,$senha);
+    $email = mysqli_escape_string($conn,$email);
 
     $sql = "SELECT username FROM users WHERE username = '$username'";
     $result = mysqli_query($conn, $sql);
@@ -65,6 +72,9 @@ public static function alt_senha ($username, $nova_senha)
     $conn = new connection();
     $conn = $conn->Connect_db();
 
+    $username= mysqli_escape_string($conn,$username);
+    $nova_senha = mysqli_escape_string($conn,$nova_senha);
+
     $sql = "UPDATE users SET senha = '$nova_senha' WHERE users.username = '$username' ";
     $result = mysqli_query($conn, $sql);
 
@@ -81,6 +91,8 @@ public static function busca_username ($username)
 {
     $conn = new connection();
     $conn = $conn->Connect_db();
+
+    $username= mysqli_escape_string($conn,$username);
 
     $sql = "SELECT username FROM users WHERE username = '$username'";
     $result = mysqli_query($conn, $sql);
@@ -131,8 +143,51 @@ public static function MeusArts($id_user)
             $artigos[] = $row;
         }
     } else {
+        $artigos = array(); // Se não houver resultados, inicializa um array vazio caso não haja artigos
+    }
+
+    //$row = mysqli_fetch_assoc($result);
+    //var_dump($row);
+    return $artigos;
+    mysqli_free_result($result); // Libera o resultado da consulta
+
+    // Fechar a conexão
+    $conn->close();
+}
+
+public static function HomeArts()
+{
+    $conn = new connection();
+    $conn = $conn->Connect_db();
+
+    $sql = "SELECT artigos.id_art, artigos.titulo, artigos.texto,artigos.data_atualizacao, 
+    users.username,
+    COALESCE(COUNT(comentarios.id_art), 0) as qnt_coments
+    FROM 
+        artigos 
+    JOIN 
+        users ON artigos.id_user = users.id
+    LEFT JOIN 
+        comentarios ON artigos.id_art = comentarios.id_art
+    where 
+        artigos.status = 'Publicado'
+    GROUP BY 
+        artigos.id_art
+    ";
+    $result = mysqli_query($conn, $sql);
+    //$result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+        // Inicializa um array para armazenar os resultados
+        $artigos = array();
+        
+        // Loop através das linhas da consulta
+        while($row = $result->fetch_assoc()) {
+            // Adiciona a linha ao array de artigos
+            $artigos[] = $row;
+        }
+    } else {
         $artigos = array(); // Se não houver resultados, inicializa um array vazio
-        echo "não há artigos";
     }
 
     //$row = mysqli_fetch_assoc($result);
@@ -167,6 +222,11 @@ public static function upar_art($titulo,$texto,$id_user,$status)
 
     $conn = new connection();
     $conn = $conn->Connect_db();
+    
+    //Permite que trecho de códigos sejam armazenados
+    $titulo= mysqli_escape_string($conn,$titulo);
+    $status = mysqli_escape_string($conn,$status);
+    $texto = mysqli_escape_string($conn,$texto);
 
     $sql = "SELECT *
     FROM artigos where artigos.id_user = '$id_user' AND artigos.titulo = '$titulo'
@@ -188,7 +248,7 @@ public static function upar_art($titulo,$texto,$id_user,$status)
         }
         else
         {
-            $aux = "Ocorreu algum erro";
+            $aux = "Ocorreu algum erro". mysqli_error($conn);
         }
     }
 return $aux;
@@ -208,9 +268,47 @@ public static function excluir_art($id_art)
         }
         else
         {
-            $aux = "Ocorreu algum erro";
+            $aux = "Ocorreu algum erro". mysqli_error($conn);
         }
     return $aux;
+}
+
+public static function upar_art_edit($titulo,$texto,$id_art,$status)
+{
+    //Primeiro pesquisar se existe algum artigo com o titulo
+
+    $conn = new connection();
+    $conn = $conn->Connect_db();
+
+    $titulo= mysqli_escape_string($conn,$titulo);
+    $status = mysqli_escape_string($conn,$status);
+    $texto = mysqli_escape_string($conn,$texto);
+
+
+    $sql = "SELECT *
+    FROM artigos where artigos.id_art != '$id_art' AND artigos.titulo = '$titulo'
+    ";
+    $result = mysqli_query($conn, $sql);
+
+    if ($result->num_rows > 0) {
+        $aux = "Titulo Indisponível";
+    }else{
+
+        $sql = "UPDATE artigos 
+        SET artigos.status = '$status', artigos.titulo = '$titulo', artigos.texto = '$texto', 
+        artigos.data_atualizacao = NOW() WHERE artigos.id_art = '$id_art' ";    
+        $result = mysqli_query($conn, $sql);
+
+        if ($result)
+        {
+            $aux = "Arquivado com sucesso";
+        }
+        else
+        {
+            $aux = "Ocorreu algum erro". mysqli_error($conn);
+        }
+    }
+return $aux;
 }
 
 //Pensar melhor se vai ser necessário guardar o token no banco de dados

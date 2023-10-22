@@ -43,10 +43,10 @@ session_start();
             $data = new Data();
             $artigos = $data->MeusArts($_SESSION['id']);
             if($artigos == NULL)
-            echo 'não há artigos';
+            echo "<tr><td colspan='4'><center>Não há artigos disponíveis.</center></td></tr>";
             else{
             // Define quantos artigos serão exibidos por página
-$artigosPorPagina = 10;
+$artigosPorPagina = 19;
 
 // Obtém o número total de páginas
 $totalPaginas = ceil(count($artigos) / $artigosPorPagina);
@@ -64,10 +64,13 @@ foreach ($artigosPagina as $artigo) {
     echo "<td><center>".$artigo['data_atualizacao']."</center></td>"; 
     echo "<td>
             <center>
-                <form method='get' action='/control/controlDetArt.php'>
+                <form method='post' action='/control/controlDetArt.php'>
                     <input type='hidden' name='id_art' value='" . $artigo['id_art'] . "'>
-                    <input type='submit' value='Editar' name='acao'>
-                    <input type='submit' value='Excluir' name='acao'>
+                    <input type='hidden' name='titulo' value='" . $artigo['titulo'] . "'>
+                    <input type='hidden' name='texto' value='" . $artigo['texto'] . "'>
+                    <input type='submit' value='Editar' name='acao' formaction='/view/Criar_artigo.php'>
+                    <input type='submit' value='Excluir' name='acao' formaction='/control/controlDetArt.php'>
+                    
                 </form>
             </center>
           </td>";
