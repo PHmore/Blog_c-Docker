@@ -9,6 +9,16 @@ $status = $data_art['status'];
 $texto = $data_art['texto'];
 $titulo = $data_art['titulo'];
 
+// Simulemos os comentários
+$comentarios = $data->coments_art($_GET['id_art']);
+
+$comentariosPorPagina = 10;
+$totalComentarios = count($comentarios);
+$totalPaginas = ceil($totalComentarios / $comentariosPorPagina);
+
+$paginaAtual = isset($_GET['pagina']) ? $_GET['pagina'] : 1;
+$comentariosPagina = array_slice($comentarios, ($paginaAtual - 1) * $comentariosPorPagina, $comentariosPorPagina);
+
 ?>
 
 <!DOCTYPE html>
@@ -36,9 +46,41 @@ $titulo = $data_art['titulo'];
     </tr>
     <tr>
         <td colspan="2">
-            <?php echo nl2br(htmlspecialchars($texto)); ?>
+            <div style="height: 500px; overflow-y: scroll;">
+                <?php echo nl2br(htmlspecialchars($texto)); ?>
+            </div>
         </td>
     </tr>
+</table>
+
+<center><h4>COMENTÁRIOS</h4></center>
+
+       
+<table border="1" width="80%" align="center">
+<tr>
+            <th>Comentário</th>
+            <th>Data</th>
+        </tr>
+    <?php foreach ($comentariosPagina as $comentario) : ?>
+        <tr>
+            <td>
+            <div style="height: 50px; overflow-y: scroll;">
+                <?php echo "<b>".$comentario['autor']."</b>: ".$comentario['conteudo']; ?>
+            </div></td>
+            <td align="center"><?php echo $comentario['data_criado']; ?></td>
+        </tr>
+    <?php endforeach; ?>
+</table>
+
+
+<table border="1" width="80%" align="center">
+            <?php
+            echo "<tr><td colspan='4' align='center'>";
+for ($i = 1; $i <= $totalPaginas; $i++) {
+    echo "<a href='?pagina=".$i."'>".$i."</a> ";
+}
+echo "</td></tr>";
+            ?>
 </table>
 
 </body>
