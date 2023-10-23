@@ -200,61 +200,35 @@ public static function HomeArts()
 }
 
 //Passar um array de comentários
-public static function dados_art($id_art)
+public static function dados_art($id_user,$id_art)
 {
     $conn = new connection();
     $conn = $conn->Connect_db();
 
-    $sql = "SELECT artigos.status, artigos.id_art, artigos.titulo, artigos.texto,artigos.data_atualizacao
+    $sql = "SELECT artigos.id_user,artigos.status, artigos.id_art, artigos.titulo, artigos.texto,artigos.data_atualizacao
     FROM artigos 
         where artigos.id_art = '$id_art'
     ";
     $result = mysqli_query($conn, $sql);
     if ($result && mysqli_num_rows($result) > 0) {
-        return mysqli_fetch_assoc($result);
+
+        $artigo = mysqli_fetch_assoc($result);
+        
+        if($artigo['id_user']== $id_user)
+        {
+        $artigo['meu'] = true;
+        return $artigo;
+        }
+        else
+        {
+        $artigo['meu'] = false;
+            return $artigo;
+        }
+        
     } else {
         $aux = "Houve algum erro em ao buscar o artigo";
     }
     return $aux;
-}
-
-public static function coments_art ($id_art)
-{
-    
-    $conn = new connection();
-    $conn = $conn->Connect_db();
-
-    $sql = "SELECT comentarios.comentario as conteudo,
-    comentarios.data_criado,
-                    users.username as autor
-    FROM comentarios 
-    JOIN 
-        users ON comentarios.id_user = users.id
-    where comentarios.id_art = '$id_art'
-    ";
-    $result = mysqli_query($conn, $sql);
-    //$result = $conn->query($sql);
-
-    if ($result->num_rows > 0) {
-        // Inicializa um array para armazenar os resultados
-        $comentarios = array();
-        
-        // Loop através das linhas da consulta
-        while($row = $result->fetch_assoc()) {
-            // Adiciona a linha ao array de artigos
-            $comentarios[] = $row;
-        }
-    } else {
-        $comentarios = array(); // Se não houver resultados, inicializa um array vazio caso não haja artigos
-    }
-
-    //$row = mysqli_fetch_assoc($result);
-    //var_dump($row);
-    return $comentarios;
-    mysqli_free_result($result); // Libera o resultado da consulta
-
-    // Fechar a conexão
-    $conn->close();
 }
 
 public static function upar_art($titulo,$texto,$id_user,$status)
@@ -352,21 +326,112 @@ public static function upar_art_edit($titulo,$texto,$id_art,$status)
 return $aux;
 }
 
-//Pensar melhor se vai ser necessário guardar o token no banco de dados
-public static function db_Token ($token, $status)
+public static function coments_art ($id_art)
 {
     
-    if($status == true)
-    {
-        //guardará o token
-    }else{
-        //apagará o token
+    $conn = new connection();
+    $conn = $conn->Connect_db();
+
+    $sql = "SELECT comentarios.comentario as conteudo,
+    comentarios.data_criado,
+                    users.username as autor
+    FROM comentarios 
+    JOIN 
+        users ON comentarios.id_user = users.id
+    where comentarios.id_art = '$id_art'
+    ";
+    $result = mysqli_query($conn, $sql);
+    //$result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+        // Inicializa um array para armazenar os resultados
+        $comentarios = array();
+        
+        // Loop através das linhas da consulta
+        while($row = $result->fetch_assoc()) {
+            // Adiciona a linha ao array de artigos
+            $comentarios[] = $row;
+        }
+    } else {
+        $comentarios = array(); // Se não houver resultados, inicializa um array vazio caso não haja artigos
     }
+
+    //$row = mysqli_fetch_assoc($result);
+    //var_dump($row);
+    return $comentarios;
+    mysqli_free_result($result); // Libera o resultado da consulta
+
+    // Fechar a conexão
+    $conn->close();
 }
 
-public static function validar_token ($token,)
+public static function coment_user ($id_user,$id_art)
+{
+    $conn = new connection();
+    $conn = $conn->Connect_db();
+
+    $sql = "SELECT comentarios.comentario as conteudo,
+    comentarios.data_criado
+FROM comentarios 
+WHERE comentarios.id_art = '$id_art' AND comentarios.id_user = '$id_user'
+";
+    $result = mysqli_query($conn, $sql);
+    //$result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+        // Inicializa um array para armazenar os resultados
+        $comentario = array();
+        $comentario = mysqli_fetch_assoc($result);
+    } else {
+        $comentario = array(); // Se não houver resultados, inicializa um array vazio caso não haja artigos
+    }
+    //$row = mysqli_fetch_assoc($result);
+    //var_dump($row);
+    return $comentario;
+    mysqli_free_result($result); // Libera o resultado da consulta
+
+    // Fechar a conexão
+    $conn->close();
+}
+
+public static function edit_coment ($id_user,$id_art,$comentario,$acao,$comented)
 {
 
+    $conn = new connection();
+    $conn = $conn->Connect_db();
+
+    if($acao == "Salvar Comentário")
+    {
+        if($comented)
+        {
+        $sql = "UPDATE comentarios 
+        SET comentario = '$comentario' 
+        WHERE comentarios.id_art = '$id_art' AND comentarios.id_user = '$id_user' ";
+        }
+        else
+        {
+            $sql = "INSERT INTO comentarios
+            (id_art, id_user, comentario, data_criado, data_atualizado) 
+            VALUES ('$id_art', '$id_user', '$comentario', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP) ";
+        }
+    }
+    else if ($acao == "Excluir Comentário")
+    {
+        $sql = "DELETE FROM comentarios 
+        WHERE comentarios.id_art = '$id_art' AND comentarios.id_user = '$id_user'";
+    }
+    
+    $result = mysqli_query($conn, $sql);
+
+    if ($result)
+        {
+            $aux = null;
+        }
+        else
+        {
+            $aux = "Ocorreu algum erro". mysqli_error($conn);
+        }
+    return $aux;
 }
 
 }

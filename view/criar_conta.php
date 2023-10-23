@@ -19,7 +19,6 @@ unset($_SESSION['username']);
 </head>
 <body>
     <h1>Cadastro</h1>
-    
     <form action="../control/controlCadastro.php" method="post">
         <label for="username">username:</label>
         <input type="text" id="username" name="username" required><br><br>

@@ -24,6 +24,8 @@ session_start();
     ?>
 <body>
 
+<form action="homepage.php" method="post">
+        <input type="submit" value="voltar"></form>
     <!-- Botão de Criar Artigo -->
     <div>
         <a href="Criar_artigo.php"><button>Criar Artigo</button></a>
@@ -88,9 +90,6 @@ echo "</td></tr>";
         ?>
 
     </table>
-
-    <form action="homepage.php" method="post">
-        <input type="submit" value="voltar"></form>
 </body>
 </body>
 </html>
