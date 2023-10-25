@@ -6,6 +6,7 @@ unset($_SESSION['username']);
 
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,16 +18,17 @@ unset($_SESSION['username']);
     }
     ?>
 </head>
+
 <body>
     <h1>Login</h1>
-    
+
     <form action="../control/controlLogin.php" method="post">
         <label for="username">Username:</label>
         <input type="text" id="username" name="username" required><br><br>
-        
+
         <label for="senha">Senha:</label>
         <input type="password" id="senha" name="senha" required>
-        
+
         <input type="submit" value="Confirmar">
         <br><br>
     </form>
@@ -35,6 +37,7 @@ unset($_SESSION['username']);
         <input type="submit" value="Esqueci a Senha">
     </form>
     <br>
+
     <form action="./modo_visitante.php" method="post">
         <input type="submit" value="Modo Visitante">
     </form>
@@ -44,4 +47,5 @@ unset($_SESSION['username']);
     </form>
 
 </body>
+
 </html>

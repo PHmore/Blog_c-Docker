@@ -5,20 +5,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $titulo = $_POST['titulo'];
     $texto = $_POST['texto'];
     $id_art = $_POST['id_art'];
-} 
-else
-{
-if(isset($_SESSION['texto'])) {
-    $texto = $_SESSION['texto'];
-    unset($_SESSION['texto']);
 } else {
-    $texto = "";
-}
+    if(isset($_SESSION['texto'])) {
+        $texto = $_SESSION['texto'];
+        unset($_SESSION['texto']);
+    } else {
+        $texto = "";
+    }
 }
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -33,7 +32,7 @@ if (isset($_SESSION['aviso'])) {
 ?>
 
 <body>
-<form method='post'>
+    <form method='post'>
         <table align="center" cellpadding="0">
             <tr>
                 <td colspan="2" align="center">
@@ -60,17 +59,17 @@ if (isset($_SESSION['aviso'])) {
             </tr>
             <tr>
                 <td colspan="2" align="center">
-                    <<a href="meus_artigos.php">Voltar</a>&emsp;
+                    <a href="meus_artigos.php">Voltar</a>&emsp;
                     <?php
                     if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         echo "<input type='hidden' name='id_art' value='" . $id_art . "'>
                         <input type='submit' value='Salvar edição' name='acao' formaction='/control/controlDetArt.php'>
                             <input type='submit' value='Publicar edição' name='acao' formaction='/control/controlDetArt.php'>";
-                    }else{
-                    
-                    echo "<input type='submit' value='Salvar' name='acao' formaction='/control/controlDetArt.php'>
-                         <input type='submit' value='Publicar' name='acao' formaction='/control/controlDetArt.php'>";}
-                ?>
+                    } else {
+                        echo "<input type='submit' value='Salvar' name='acao' formaction='/control/controlDetArt.php'>
+                         <input type='submit' value='Publicar' name='acao' formaction='/control/controlDetArt.php'>";
+                    }
+                    ?>
                 </td>
             </tr>
         </table>
