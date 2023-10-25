@@ -227,10 +227,15 @@ class Data {
         $conn = new connection();
         $conn = $conn->Connect_db();
     
-        $sql = "DELETE FROM artigos WHERE artigos.id_art = $id_art";
-        $result = mysqli_query($conn, $sql);
+        // Exclui os comentários
+    $sql_comentarios = "DELETE FROM comentarios WHERE id_art = $id_art";
+    $result_comentarios = mysqli_query($conn, $sql_comentarios);
+
+    // Exclui o artigo
+    $sql_artigo = "DELETE FROM artigos WHERE id_art = $id_art";
+    $result_artigo = mysqli_query($conn, $sql_artigo);
     
-        if ($result)
+        if ($result_artigo && $result_comentarios)
             {
                 $aux = "Excluido com sucesso";
             }

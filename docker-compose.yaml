@@ -37,6 +37,3 @@ services:
       depends_on:
           - database_mysql
 
-
-
-
